@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fan.whale.mapper.RoleSourceMidMapper">
+    <insert id="insertBatch" keyColumn="m_id" keyProperty="mId" parameterType="cn.fan.whale.entity.RoleSourceMidEntity" useGeneratedKeys="true">
+        insert into whale_role_source_mid
+            (role_id, source_id, ctime, mtime)
+        values
+           <foreach collection="records" item="record" separator=",">
+            (#{record.roleId}, #{record.sourceId}, #{record.ctime}, #{record.mtime})
+           </foreach>
+    </insert>
+    <delete id="deleteByRoleId" parameterType="java.lang.Integer">
+        delete from whale_role_source_mid
+        where role_id = #{roleId}
+    </delete>
+</mapper>

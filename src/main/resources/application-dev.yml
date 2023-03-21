@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    mysql:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://162.14.119.233:3306/whale?useUnicode=true&characterEncoding=utf8&useSSL=false
+      username: root
+      password: 17629207915gcfs.
+      validation-query: SELECT 1 FROM DUAL
+      initial-size: 5
+      max-active: 20
+      min-idle: 5
+      max-wait: 6000
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+  data:
+    mongodb:
+      uri: mongodb://162.14.119.233:27017/whale
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*Mapper.xml
+
+pagehelper:
+  dialect: mysql
+  reasonable: true

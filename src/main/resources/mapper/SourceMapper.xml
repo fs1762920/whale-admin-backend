@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fan.whale.mapper.SourceMapper">
+    <resultMap id="BaseResultMap" type="cn.fan.whale.entity.SourceEntity">
+        <id column="source_id" jdbcType="INTEGER" property="sourceId" />
+        <result column="source_name" jdbcType="VARCHAR" property="sourceName" />
+        <result column="source_code" jdbcType="VARCHAR" property="sourceCode" />
+        <result column="source_type" jdbcType="INTEGER" property="sourceType" />
+        <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+        <result column="sort" jdbcType="INTEGER" property="sort" />
+        <result column="source_route" jdbcType="VARCHAR" property="sourceRoute" />
+        <result column="available" jdbcType="INTEGER" property="available" />
+        <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+        <result column="mtime" jdbcType="TIMESTAMP" property="mtime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        source_id, source_name, source_code, source_type, parent_id, sort, source_route, available, ctime, mtime
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from whale_source
+        where source_id = #{sourceId}
+    </select>
+    <select id="selectBySelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from whale_source
+        <where>
+            <if test="sourceName != null">
+                source_name like concat('%', #{sourceName}, '%')
+            </if>
+            <if test="available != null">
+                available = #{available}
+            </if>
+        </where>
+    </select>
+    <select id="selectByRoleId" resultMap="BaseResultMap">
+        select
+            s.source_id, s.source_name, s.source_code, s.source_type, s.parent_id, s.sort, s.source_route, s.available, s.ctime, s.mtime
+        from whale_source s
+        left join whale_role_source_mid m on m.source_id = s.source_id
+        where m.role_id=#{roleId}
+    </select>
+    <insert id="insert" keyColumn="source_id" keyProperty="sourceId" parameterType="cn.fan.whale.entity.SourceEntity" useGeneratedKeys="true">
+        insert into whale_source
+        (source_name, source_code, source_type, parent_id, sort, source_route, available, ctime, mtime)
+        values
+            (#{sourceName}, #{sourceCode}, #{sourceType},
+             #{parentId}, #{sort}, #{sourceRoute},
+             #{available}, #{ctime}, #{mtime})
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.tuner.statistic.bean.TdDataOcpxEntity">
+        update whale_source
+        <set>
+            <if test="sourceName != null">
+                source_name = #{sourceName},
+            </if>
+            <if test="sourceCode != null">
+                source_code = #{sourceCode},
+            </if>
+            <if test="sourceType != null">
+                source_type = #{sourceType},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="sourceRoute != null">
+                source_route = #{sourceRoute},
+            </if>
+            <if test="available != null">
+                available = #{available},
+            </if>
+            <if test="mtime != null">
+                mtime = #{mtime},
+            </if>
+        </set>
+        where source_id = #{sourceId}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from whale_source
+        where source_id = #{sourceId}
+    </delete>
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fan.whale.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="cn.fan.whale.entity.RoleEntity">
+        <id column="role_id" jdbcType="INTEGER" property="roleId" />
+        <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+        <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
+        <result column="available" jdbcType="INTEGER" property="available" />
+        <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+        <result column="mtime" jdbcType="TIMESTAMP" property="mtime" />
+        <collection property="sourceList" ofType="cn.fan.whale.entity.SourceEntity">
+            <id property="sourceId" column="source_id"/>
+            <result property="sourceName" column="source_name"/>
+            <result property="sourceCode" column="source_code"/>
+            <result property="sourceType" column="source_type"/>
+            <result property="parentId" column="parent_id"/>
+            <result property="sort" column="sort"/>
+            <result property="sourceRoute" column="source_route"/>
+        </collection>
+    </resultMap>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+            r.role_id, r.role_name, r.role_code, r.available, r.ctime, r.mtime
+
+        from whale_role r
+--         left join whale_role_source_mid m on r.role_id=m.role_id
+--         left join whale_source s on s.source_id=m.source_id
+        where r.role_id = #{roleId}
+    </select>
+    <select id="selectBySelective" resultMap="BaseResultMap">
+        select
+            r.role_id, r.role_name, r.role_code, r.available, r.ctime, r.mtime,
+        from whale_role r
+        left join whale_role r on r.role_id=u.role_id
+        <where>
+            <if test="roleName != null">
+                r.role_name like concat('%', #{roleName}, '%')
+            </if>
+            <if test="roleCode != null">
+                r.role_code like concat('%', #{roleCode}, '%')
+            </if>
+            <if test="available != null">
+                r.available = #{available}
+            </if>
+        </where>
+    </select>
+    <insert id="insert" keyColumn="role_id" keyProperty="roleId" parameterType="cn.fan.whale.entity.RoleEntity" useGeneratedKeys="true">
+        insert into whale_role
+            (role_name, role_code, available, ctime, mtime)
+        values
+            (#{roleName}, #{roleCode}, #{available}, #{ctime}, #{mtime})
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.tuner.statistic.bean.TdDataOcpxEntity">
+        update whale_role
+        <set>
+            <if test="roleName != null">
+                role_name = #{roleName},
+            </if>
+            <if test="roleCode != null">
+                role_code = #{roleCode},
+            </if>
+            <if test="available != null">
+                available = #{available},
+            </if>
+            <if test="mtime != null">
+                mtime = #{mtime},
+            </if>
+        </set>
+        where role_id = #{roleId}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from whale_role
+        where role_id = #{roleId}
+    </delete>
+</mapper>
