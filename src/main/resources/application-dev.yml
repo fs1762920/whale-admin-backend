@@ -23,5 +23,4 @@ mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
 
 pagehelper:
-  dialect: mysql
   reasonable: true
